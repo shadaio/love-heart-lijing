@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给李静静的爱心动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            touch-action: manipulation;
+        }
+        
+        .title {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 2em;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+            z-index: 100;
+            animation: glow 2s ease-in-out infinite alternate;
+            padding: 0 20px;
+        }
+        
+        .name-title {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #ffeb3b;
+            font-size: 1.8em;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            z-index: 100;
+            animation: nameGlow 3s ease-in-out infinite alternate;
+        }
+        
+        .love-message {
+            position: absolute;
+            color: white;
+            font-size: 1.2em;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+            z-index: 99;
+            pointer-events: none;
+            animation: messageFloat 8s ease-in-out forwards;
+            text-align: center;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        .subtitle {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9em;
+            z-index: 100;
+            padding: 0 20px;
+        }
+        
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8em;
+            z-index: 100;
+            padding: 0 15px;
+        }
+
+        /* 修复爱心样式 */
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+            width: var(--size);
+            height: var(--size);
+            transform-origin: center;
+        }
+        
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: calc(var(--size) * 0.5);
+            height: calc(var(--size) * 0.8);
+            background: var(--color);
+            border-radius: calc(var(--size) * 0.5) calc(var(--size) * 0.5) 0 0;
+        }
+        
+        .heart::before {
+            left: calc(var(--size) * 0.5);
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        
+        .heart::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+        
+        /* 爱心动画 */
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg) scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes burst {
+            0% {
+                transform: translate(0, 0) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--burst-x), var(--burst-y)) scale(2) rotate(180deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes spiral {
+            0% {
+                transform: translate(0, 0) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--spiral-x), -100px) scale(1.5) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 20, 147, 0.9), 
+                           0 0 40px rgba(255, 105, 180, 0.6);
+            }
+        }
+        
+        @keyframes nameGlow {
+            from {
+                text-shadow: 0 0 15px rgba(255, 215, 0, 0.8),
+                           0 0 25px rgba(255, 165, 0, 0.6);
+            }
+            to {
+                text-shadow: 0 0 25px rgba(255, 215, 0, 1),
+                           0 0 35px rgba(255, 165, 0, 0.8),
+                           0 0 45px rgba(255, 140, 0, 0.6);
+            }
+        }
+        
+        @keyframes messageFloat {
+            0% {
+                transform: translateY(0) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1);
+            }
+            80% {
+                opacity: 1;
+                transform: translateY(-80px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0.8);
+            }
+        }
+        
+        /* 背景装饰爱心 */
+        .bg-heart {
+            position: absolute;
+            opacity: 0.1;
+            animation: float-bg 20s linear infinite;
+        }
+        
+        @keyframes float-bg {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+        
+        /* 控制面板 - 修复位置问题 */
+        .controls {
+            position: fixed;
+            top: 80px; /* 往下移动，避免被设置按钮遮挡 */
+            left: 10px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transform: scale(0.9);
+            transform-origin: top left;
+            transition: all 0.3s ease;
+            max-width: 160px;
+        }
+        
+        .control-group {
+            margin-bottom: 8px;
+        }
+        
+        .control-group label {
+            display: block;
+            color: white;
+            margin-bottom: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff6b9d;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-group select {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 11px;
+            outline: none;
+        }
+        
+        .stats {
+            color: white;
+            font-size: 10px;
+            margin-top: 8px;
+            text-align: center;
+            opacity: 0.8;
+        }
+        
+        /* 设置按钮 - 固定在左上角 */
+        .controls-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* 手机端响应式 */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.5em;
+                top: 15px;
+            }
+            
+            .name-title {
+                font-size: 1.4em;
+                top: 45px;
+            }
+            
+            .subtitle {
+                font-size: 0.8em;
+                top: 80px;
+            }
+            
+            .instructions {
+                font-size: 0.7em;
+                bottom: 15px;
+            }
+            
+            .controls {
+                transform: scale(0.8);
+                top: 60px; /* 手机端也往下移动 */
+                left: 5px;
+                padding: 10px;
+                max-width: 140px;
+            }
+            
+            .control-group label {
+                font-size: 10px;
+            }
+            
+            .control-group select {
+                font-size: 10px;
+                padding: 5px 6px;
+            }
+            
+            .stats {
+                font-size: 9px;
+            }
+            
+            /* 在小屏幕上默认隐藏控制面板 */
+            .controls {
+                opacity: 0;
+                pointer-events: none;
+                transform: translateX(-100%) scale(0.8);
+            }
+            
+            .controls.active {
+                opacity: 1;
+                pointer-events: all;
+                transform: translateX(0) scale(0.8);
+            }
+            
+            .controls-toggle {
+                display: block;
+            }
+        }
+        
+        /* 特殊爱心效果 */
+        .sparkle-heart::before,
+        .sparkle-heart::after {
+            background: linear-gradient(45deg, var(--color), #ffffff);
+        }
+        
+        .gradient-heart::before,
+        .gradient-heart::after {
+            background: linear-gradient(135deg, var(--color1), var(--color2));
+        }
+    </style>
+</head>
+<body>
+    <div class="title">💖 浪漫爱心动画 💖</div>
+    <div class="name-title">❤️ 李珂献给最爱的李静静 ❤️</div>
+    <div class="subtitle">点击任意位置创建美丽的爱心动画</div>
+    
+    <!-- 设置按钮在左上角 -->
+    <button class="controls-toggle" onclick="toggleControls()">⚙️ 设置</button>
+    
+    <!-- 控制面板在设置按钮下方 -->
+    <div class="controls" id="controlsPanel">
+        <div class="control-group">
+            <label>爱心大小: <span id="sizeValue">40px</span></label>
+            <input type="range" id="sizeSlider" min="20" max="100" value="40">
+        </div>
+        <div class="control-group">
+            <label>动画时长: <span id="durationValue">3s</span></label>
+            <input type="range" id="durationSlider" min="1" max="10" value="3" step="0.5">
+        </div>
+        <div class="control-group">
+            <label>爱心类型:</label>
+            <select id="heartType">
+                <option value="random">随机颜色</option>
+                <option value="red">红色系</option>
+                <option value="pink">粉色系</option>
+                <option value="rainbow">彩虹色</option>
+                <option value="gradient">渐变爱心</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>动画效果:</label>
+            <select id="animationType">
+                <option value="float">漂浮上升</option>
+                <option value="burst">爆发扩散</option>
+                <option value="spiral">螺旋上升</option>
+            </select>
+        </div>
+        <div class="stats">
+            已创建: <span id="heartCount">0</span> 个爱心
+        </div>
+    </div>
+
+    <!-- 隐藏的音乐播放器 -->
+    <audio id="bgMusic" loop autoplay>
+        <source src="https://music.163.com/song/media/outer/url?id=1391425499.mp3" type="audio/mpeg">
+    </audio>
+    
+    <div class="instructions">点击页面任意位置创建爱心 | 音乐自动播放中</div>
+
+    <script>
+        let heartCount = 0;
+        let currentSize = 40;
+        let currentDuration = 3;
+        let currentHeartType = 'random';
+        let currentAnimation = 'float';
+        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // 爱的话语列表
+        const loveMessages = [
+            "💖 李静静，你是我的全世界 💖",
+            "🌟 最可爱漂亮的公主殿下 🌟",
+            "😍 爱你一万年，我的宝贝 😍",
+            "💕 你是我心中最美的风景 💕",
+            "🎀 最迷人漂亮的老婆 🎀",
+            "✨ 遇见你是我最大的幸运 ✨",
+            "🌹 你是我永远的公主 🌹",
+            "💝 每一天都更爱你一些 💝",
+            "🎉 你让我的世界充满色彩 🎉",
+            "💫 永远爱你的小可爱 💫",
+            "🌸 你是我最美的梦 🌸",
+            "💞 我的心只为你跳动 💞",
+            "🎵 爱你到天荒地老 🎵",
+            "💗 你是我生命中的光 💗",
+            "🌺 最温柔可爱的宝贝 🌺",
+            "💘 永远守护你，我的爱人 💘",
+            "🎈 你是我的一切 🎈",
+            "💓 爱你胜过爱自己 💓"
+        ];
+        
+        // 颜色配置
+        const colorSchemes = {
+            random: ['#ff6b6b', '#ff9ff3', '#f368e0', '#ff9f43', '#54a0ff', '#5f27cd', '#00d2d3'],
+            red: ['#ff6b6b', '#ff4757', '#ff3838', '#ff4d4d', '#ff6b8b'],
+            pink: ['#ff9ff3', '#f368e0', '#ff6b9d', '#ff85a1', '#ff6b8b'],
+            rainbow: ['#ff6b6b', '#ff9f43', '#feca57', '#48dbfb', '#54a0ff', '#5f27cd', '#00d2d3'],
+            gradient: ['#ff6b6b-#ff9f43', '#ff9ff3-#ff6b9d', '#54a0ff-#48dbfb', '#f368e0-#5f27cd']
+        };
+        
+        // 初始化控制面板
+        document.getElementById('sizeSlider').addEventListener('input', function(e) {
+            currentSize = parseInt(e.target.value);
+            document.getElementById('sizeValue').textContent = currentSize + 'px';
+        });
+        
+        document.getElementById('durationSlider').addEventListener('input', function(e) {
+            currentDuration = parseFloat(e.target.value);
+            document.getElementById('durationValue').textContent = currentDuration + 's';
+        });
+        
+        document.getElementById('heartType').addEventListener('change', function(e) {
+            currentHeartType = e.target.value;
+        });
+        
+        document.getElementById('animationType').addEventListener('change', function(e) {
+            currentAnimation = e.target.value;
+        });
+        
+        // 切换控制面板显示
+        function toggleControls() {
+            const controls = document.getElementById('controlsPanel');
+            controls.classList.toggle('active');
+        }
+        
+        // 自动播放音乐
+        function autoPlayMusic() {
+            const music = document.getElementById('bgMusic');
+            
+            // 预加载音乐
+            music.load();
+            
+            // 尝试自动播放
+            const playPromise = music.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('音乐自动播放成功');
+                }).catch(error => {
+                    console.log('自动播放失败:', error);
+                    // 如果自动播放失败，在用户交互后重试
+                    document.addEventListener('click', function retryPlay() {
+                        music.play().then(() => {
+                            console.log('用户交互后播放成功');
+                        }).catch(e => {
+                            console.log('用户交互后播放也失败');
+                        });
+                        document.removeEventListener('click', retryPlay);
+                    }, { once: true });
+                });
+            }
+        }
+        
+        // 创建爱的话语
+        function createLoveMessage(x, y) {
+            if (Math.random() > 0.3) return; // 70%的几率不创建文字
+            
+            const message = document.createElement('div');
+            message.className = 'love-message';
+            message.textContent = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+            
+            message.style.left = (x - 100) + 'px';
+            message.style.top = y + 'px';
+            
+            document.body.appendChild(message);
+            
+            // 动画结束后移除
+            setTimeout(() => {
+                if (message.parentNode) {
+                    message.parentNode.removeChild(message);
+                }
+            }, 8000);
+        }
+        
+        // 创建背景装饰爱心
+        function createBackgroundHearts() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    createBackgroundHeart();
+                }, i * 300);
+            }
+        }
+        
+        function createBackgroundHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart bg-heart';
+            
+            const size = Math.random() * 30 + 20;
+            const colors = ['#ff6b6b', '#ff9ff3', '#f368e0'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            heart.style.setProperty('--size', size + 'px');
+            heart.style.setProperty('--color', color);
+            
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                }
+            }, 25000);
+        }
+        
+        // 创建点击爱心
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            
+            // 设置大小
+            heart.style.setProperty('--size', currentSize + 'px');
+            
+            // 设置颜色
+            const colors = colorSchemes[currentHeartType];
+            let color = colors[Math.floor(Math.random() * colors.length)];
+            
+            if (currentHeartType === 'gradient') {
+                // 处理渐变颜色
+                const [color1, color2] = color.split('-');
+                heart.style.setProperty('--color1', color1);
+                heart.style.setProperty('--color2', color2);
+                heart.classList.add('gradient-heart');
+            } else {
+                heart.style.setProperty('--color', color);
+                
+                // 随机添加闪光效果
+                if (Math.random() > 0.7) {
+                    heart.classList.add('sparkle-heart');
+                }
+            }
+            
+            // 设置位置
+            heart.style.left = (x - currentSize / 2) + 'px';
+            heart.style.top = (y - currentSize / 2) + 'px';
+            
+            // 设置动画
+            let animationName = 'float';
+            
+            switch(currentAnimation) {
+                case 'burst':
+                    animationName = 'burst';
+                    const burstX = (Math.random() * 200 - 100) + 'px';
+                    const burstY = (Math.random() * 200 - 100) + 'px';
+                    heart.style.setProperty('--burst-x', burstX);
+                    heart.style.setProperty('--burst-y', burstY);
+                    break;
+                case 'spiral':
+                    animationName = 'spiral';
+                    const spiralX = (Math.random() * 100 - 50) + 'px';
+                    heart.style.setProperty('--spiral-x', spiralX);
+                    break;
+                default:
+                    animationName = 'float';
+            }
+            
+            heart.style.animation = `${animationName} ${currentDuration}s ease-out forwards`;
+            
+            document.body.appendChild(heart);
+            heartCount++;
+            document.getElementById('heartCount').textContent = heartCount;
+            
+            // 动画结束后移除元素
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                }
+            }, currentDuration * 1000);
+        }
+        
+        // 添加点击事件
+        document.addEventListener('click', function(e) {
+            // 防止点击控制面板区域触发爱心
+            if (!e.target.closest('.controls') && !e.target.closest('.controls-toggle')) {
+                createHeart(e.clientX, e.clientY);
+                createLoveMessage(e.clientX, e.clientY);
+                
+                // 创建多个爱心形成簇拥效果
+                const heartCount = Math.floor(Math.random() * 4) + 2;
+                for (let i = 0; i < heartCount; i++) {
+                    setTimeout(() => {
+                        const offsetX = (Math.random() - 0.5) * 80;
+                        const offsetY = (Math.random() - 0.5) * 80;
+                        createHeart(e.clientX + offsetX, e.clientY + offsetY);
+                    }, i * 80);
+                }
+            }
+        });
+        
+        // 添加触摸事件（移动端）
+        document.addEventListener('touchstart', function(e) {
+            // 防止触摸控制面板区域触发爱心
+            if (!e.target.closest('.controls') && !e.target.closest('.controls-toggle')) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                createHeart(touch.clientX, touch.clientY);
+                createLoveMessage(touch.clientX, touch.clientY);
+                
+                const heartCount = Math.floor(Math.random() * 3) + 1;
+                for (let i = 0; i < heartCount; i++) {
+                    setTimeout(() => {
+                        const offsetX = (Math.random() - 0.5) * 60;
+                        const offsetY = (Math.random() - 0.5) * 60;
+                        createHeart(touch.clientX + offsetX, touch.clientY + offsetY);
+                    }, i * 60);
+                }
+            }
+        }, { passive: false });
+        
+        // 初始化
+        window.onload = function() {
+            createBackgroundHearts();
+            setInterval(createBackgroundHeart, 1500);
+            
+            // 自动播放音乐
+            autoPlayMusic();
+            
+            // 初始创建一些爱心和文字
+            setTimeout(() => {
+                for (let i = 0; i < 8; i++) {
+                    setTimeout(() => {
+                        const x = Math.random() * window.innerWidth;
+                        const y = Math.random() * window.innerHeight;
+                        createHeart(x, y);
+                        if (i % 2 === 0) {
+                            createLoveMessage(x, y);
+                        }
+                    }, i * 300);
+                }
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
